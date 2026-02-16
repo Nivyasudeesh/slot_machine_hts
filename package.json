@@ -1,0 +1,23 @@
+{
+  "name": "js_slotmachine",
+  "version": "1.0.0",
+  "description": "\"# js_slot_machine\" \r \"# js_slot_machine\"",
+  "main": "project.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anakhavaishakham2005/js_slot_machine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anakhavaishakham2005/js_slot_machine/issues"
+  },
+  "homepage": "https://github.com/anakhavaishakham2005/js_slot_machine#readme",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  },
+  "devDependencies": {}
+}
