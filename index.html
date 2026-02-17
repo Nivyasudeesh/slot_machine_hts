@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slot Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🎰 Slot Machine</h1>
+
+  <div class="game-box">
+    <p>Balance: $<span id="balance">0</span></p>
+
+    <input type="number" id="deposit" placeholder="Deposit amount">
+    <button onclick="startGame()">Deposit</button>
+
+    <br><br>
+
+    <input type="number" id="lines" placeholder="Lines (1-3)">
+    <input type="number" id="bet" placeholder="Bet per line">
+    <button onclick="play()">Spin</button>
+
+    <h2 id="result"></h2>
+
+    <div id="slot-display"></div>
+  </div>
+
+  <script src="project.js"></script>
+</body>
+</html>
