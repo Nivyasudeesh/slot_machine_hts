@@ -70,19 +70,41 @@ function transpose(reels) {
 
 function getWinnings(rows, bet, lines) {
   let winnings = 0;
+
+  // 🔹 Horizontal win check
   for (let row = 0; row < lines; row++) {
     const symbols = rows[row];
     let allSame = true;
+
     for (const symbol of symbols) {
       if (symbol !== symbols[0]) {
         allSame = false;
         break;
       }
     }
+
     if (allSame) {
       winnings += bet * SYMBOL_VALUES[symbols[0]];
     }
   }
+
+  // 🔹 Vertical win check
+  for (let col = 0; col < COLS; col++) {
+    const firstSymbol = rows[0][col];
+    let allSame = true;
+
+    for (let row = 1; row < ROWS; row++) {
+      if (rows[row][col] !== firstSymbol) {
+        allSame = false;
+        break;
+      }
+    }
+
+    if (allSame) {
+      winnings += bet * SYMBOL_VALUES[firstSymbol];
+    }
+  }
+
   return winnings;
 }
 
