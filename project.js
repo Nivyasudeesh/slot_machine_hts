@@ -25,13 +25,13 @@ const SYMBOL_DISPLAY = {
 
 let balance = 0;
 
-function startGame() {
+function deposit() {
   const deposit = parseFloat(document.getElementById("deposit").value);
   if (isNaN(deposit) || deposit <= 0) {
     alert("Invalid deposit amount");
     return;
   }
-  balance = deposit;
+  balance += deposit;
   document.getElementById("balance").innerText = balance;
 }
 
