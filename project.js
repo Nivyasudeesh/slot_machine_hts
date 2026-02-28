@@ -24,11 +24,6 @@ const SYMBOL_DISPLAY = {
 };
 
 let balance = 0;
-// 🔊 Sound Effects
-const spinSound = new Audio("assets/sounds/spin.mp3");
-const winSound = new Audio("assets/sounds/win.mp3");
-const loseSound = new Audio("assets/sounds/lose.mp3");
-let soundEnabled = true;
 
 function deposit() {
   const deposit = parseFloat(document.getElementById("deposit").value);
@@ -137,34 +132,7 @@ function displayReels(rows, winningRows) {
 
   display.appendChild(grid);
 }
-function animateSpin(duration = 1500) {
-  const display = document.getElementById("slot-display");
 
-  const interval = setInterval(() => {
-    const grid = document.createElement("div");
-    grid.className = "reel-grid";
-
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement("div");
-      cell.className = "reel-cell";
-
-      // Random emoji
-      const emojis = Object.values(SYMBOL_DISPLAY);
-      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-      cell.textContent = randomEmoji;
-
-      grid.appendChild(cell);
-    }
-
-    display.innerHTML = "";
-    display.appendChild(grid);
-
-  }, 100); // change every 100ms
-
-  setTimeout(() => {
-    clearInterval(interval);
-  }, duration);
-}
 function play() {
   const lines = parseInt(document.getElementById("lines").value);
   const bet = parseFloat(document.getElementById("bet").value);
@@ -180,61 +148,36 @@ function play() {
 
   balance -= bet * lines;
 
-  // 🔊 Start spin sound
-  spinSound.currentTime = 0;
-  if (soundEnabled) spinSound.play();
-  animateSpin(1500);
+  const reels = spin();
+  const rows = transpose(reels);
 
-  // ⏳ Delay result to simulate spinning
-  setTimeout(() => {
+  // Find winning rows
+  const winningRows = [];
+  for (let row = 0; row < lines; row++) {
+    const symbols = rows[row];
+    const allSame = symbols.every(s => s === symbols[0]);
+    if (allSame) winningRows.push(row);
+  }
 
-    const reels = spin();
-    const rows = transpose(reels);
+  displayReels(rows, winningRows);
 
-    // Find winning rows
-    const winningRows = [];
-    for (let row = 0; row < lines; row++) {
-      const symbols = rows[row];
-      const allSame = symbols.every(s => s === symbols[0]);
-      if (allSame) winningRows.push(row);
-    }
+  const winnings = getWinnings(rows, bet, lines);
+  balance += winnings;
 
-    displayReels(rows, winningRows);
+  document.getElementById("balance").innerText = balance;
 
-    const winnings = getWinnings(rows, bet, lines);
-    balance += winnings;
+  const resultEl = document.getElementById("result");
+  if (winnings > 0) {
+    resultEl.innerText = "🎉 You won $" + winnings + "!";
+    resultEl.style.color = "#FFD700";
+  } else {
+    resultEl.innerText = "😢 No win this time";
+    resultEl.style.color = "#888";
+  }
 
-    document.getElementById("balance").innerText = balance;
-
-    const resultEl = document.getElementById("result");
-
-    // 🛑 Stop spin sound
-    spinSound.pause();
-    spinSound.currentTime = 0;
-
-    if (winnings > 0) {
-      if (soundEnabled) {
-        winSound.currentTime = 0;
-        winSound.play();
-      }
-
-      resultEl.innerText = "🎉 You won $" + winnings + "!";
-      resultEl.style.color = "#FFD700";
-    } else {
-      if (soundEnabled) {
-        loseSound.currentTime = 0;
-        loseSound.play();
-      }
-
-      resultEl.innerText = "😢 No win this time";
-      resultEl.style.color = "#888";
-    }
-
-    if (balance <= 0) {
-      alert("Game Over!");
-    }
-
-  }, 1500); // 1.5 second delay
+  if (balance <= 0) {
+    alert("Game Over!");
+  }
 }
 // How To Play Toggle
 document.addEventListener("DOMContentLoaded", function () {
@@ -249,19 +192,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-
-  const btn = document.getElementById("soundToggleBtn");
-
-  if (soundEnabled) {
-    btn.innerText = "🔊 Sound ON";
-  } else {
-    btn.innerText = "🔇 Sound OFF";
-
-    spinSound.pause();
-    spinSound.currentTime = 0;
-    winSound.pause();
-    loseSound.pause();
-  }
-}
